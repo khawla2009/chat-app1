@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دردشة خاصة وآمنة</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f4; }
+        #chat-container { width: 90%; max-width: 500px; margin: auto; border: 1px solid #ccc; padding: 10px; border-radius: 10px; background-color: white; }
+        #messages { height: 300px; overflow-y: auto; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 10px; }
+        input, button { width: 100%; padding: 10px; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <h2>دردشة خاصة وآمنة بينك وبين أخيك</h2>
+    <div id="chat-container">
+        <div id="messages"></div>
+        <input type="password" id="password" placeholder="أدخل كلمة المرور" onkeyup="checkPassword()">
+        <input type="text" id="messageInput" placeholder="اكتب رسالة..." disabled>
+        <button onclick="sendMessage()" disabled>إرسال</button>
+    </div>
+
+    <script>
+        const messagesDiv = document.getElementById("messages");
+        const messageInput = document.getElementById("messageInput");
+        const passwordInput = document.getElementById("password");
+        const sendButton = document.querySelector("button");
+        const chatPassword = "secure123"; // كلمة مرور ثابتة للتجربة
+
+        function checkPassword() {
+            if (passwordInput.value === chatPassword) {
+                messageInput.disabled = false;
+                sendButton.disabled = false;
+            } else {
+                messageInput.disabled = true;
+                sendButton.disabled = true;
+            }
+        }
+
+        function encryptMessage(message) {
+            return btoa(message); // تشفير بسيط باستخدام Base64
+        }
+
+        function decryptMessage(encryptedMessage) {
+            return atob(encryptedMessage);
+        }
+
+        function sendMessage() {
+            const message = messageInput.value;
+            if (message.trim() === "") return;
+            
+            const encryptedMessage = encryptMessage("أنت: " + message);
+            const messageElement = document.createElement("p");
+            messageElement.textContent = decryptMessage(encryptedMessage);
+            messagesDiv.appendChild(messageElement);
+            
+            messageInput.value = "";
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+    </script>
+</body>
+</html>
